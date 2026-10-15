@@ -1,4 +1,5 @@
 # Báo cáo đồ án cuối kỳ
+**Trường:** Đại học Thủy Lợi
 **Môn:** Cơ sở dữ liệu
 
 **Đề tài:** Hệ thống quản lý khách sạn
@@ -22,7 +23,7 @@ Nhóm em thực hiện đồ án “Hệ thống quản lý khách sạn” nh�
 
 Mục tiêu của đồ án này là không chỉ làm một bài tập trên lý thuyết mà còn xây dựng cách tư duy thiết kế cơ sở dữ liệu đúng chuẩn. Nhóm em đã cố gắng mô tả rõ quy trình từ phân tích nghiệp vụ đến thiết kế mô hình dữ liệu, sau đó cài đặt bảng trên SQL Server và minh họa các thao tác dữ liệu thông qua SQL.
 
-Trong báo cáo này, phần mô hình quan hệ và phần dữ liệu sẽ được trình bày có hệ thống, rõ ràng và phù hợp với yêu cầu của môn học. Phần 15 câu truy vấn SQL đã được tách riêng trong file `queries.sql` theo yêu cầu của nhóm, để không làm lộn giữa phần báo cáo chính và phần khai thác dữ liệu.
+Trong báo cáo này, phần mô hình quan hệ và phần dữ liệu sẽ được trình bày có hệ thống, rõ ràng và phù hợp với yêu cầu của môn học. Phần 15 câu truy vấn SQL đã được tách riêng và lưu trong file riêng để phục vụ mục đích kiểm tra của nhóm, không đưa vào báo cáo chính theo yêu cầu đề bài.
 
 ---
 
@@ -96,7 +97,7 @@ Các nghiệp vụ chính của hệ thống khách sạn bao gồm:
    - Thêm, cập nhật loại phòng, thông tin tầng, số phòng và trạng thái phòng.
    - Theo dõi phòng trống, phòng đã đặt, phòng đang ở và phòng bảo trì.
 3. Quản lý đặt phòng
-   - Khách hàng đặt phòng theo ngày đến, ngày đi và số lượng khách.
+   - Khách hàng đặt phòng theo ngày đến, ngày đi và số lượng người.
    - Một đơn đặt phòng có thể gắn với nhiều phòng.
    - Có thể hủy hoặc cập nhật trạng thái đặt phòng.
 4. Quản lý hóa đơn
@@ -106,7 +107,7 @@ Các nghiệp vụ chính của hệ thống khách sạn bao gồm:
    - Khách sạn có nhiều loại dịch vụ: giặt ủi, ăn sáng, spa, đưa đón, bể bơi...
    - Dịch vụ có thể được ghi nhận trong hóa đơn.
 6. Quản lý nhân viên
-   - Quản lý thông tin personeel và người lập hóa đơn.
+   - Quản lý thông tin nhân viên và người lập hóa đơn.
 7. Báo cáo doanh thu
    - Thống kê doanh thu theo tháng, theo loại phòng, theo dịch vụ.
 
@@ -117,12 +118,6 @@ Các nghiệp vụ chính của hệ thống khách sạn bao gồm:
 ## 2.1 Mục đích hệ thống
 
 Hệ thống được xây dựng với mục đích tạo ra một cơ sở dữ liệu tập trung, giúp khách sạn lưu trữ, cập nhật và truy vấn thông tin ngày càng hiệu quả hơn. Thông tin cần được quản lý có tính chính xác và nhất quán để phục vụ cho nhiều chức năng khác nhau như tra cứu phòng, lập hóa đơn, tính doanh thu và kiểm tra dữ liệu lịch sử.
-
-Một hệ thống CSDL tốt không chỉ giúp lưu giữ dữ liệu mà còn đảm bảo:
-- không có dữ liệu trùng lặp không cần thiết;
-- các mối quan hệ giữa bảng được xác định rõ ràng;
-- dữ liệu là nhất quán và dễ quản lý;
-- các hành vi không hợp lệ bị chặn bởi ràng buộc toàn vẹn.
 
 ## 2.2 Đối tượng quản lý
 
@@ -157,154 +152,106 @@ Nhân viên là người thực hiện các thao tác nghiệp vụ như lập h
 
 Hệ thống khách sạn cần đảm bảo các nghiệp vụ sau:
 1. Nghiệp vụ đăng ký khách hàng
-   - Khách hàng mới được nhập thông tin đầy đủ.
-   - Hệ thống lưu thông tin liên hệ để dễ liên lạc sau này.
 2. Nghiệp vụ đặt phòng
-   - Khách hàng đặt phòng theo ngày và số lượng người.
-   - Hệ thống quản lý trạng thái đặt phòng.
 3. Nghiệp vụ nhận phòng
-   - Lễ tân cập nhật trạng thái phòng từ Available sang Occupied.
 4. Nghiệp vụ trả phòng
-   - Khi khách trả phòng, lập hóa đơn và tính tiền theo trạng thái phòng và số đêm.
 5. Nghiệp vụ dịch vụ đi kèm
-   - Khách có thể sử dụng thêm dịch vụ trong thời gian lưu trú.
 6. Nghiệp vụ báo cáo và thống kê
-   - Báo cáo doanh thu, tìm phòng trống, tìm dịch vụ bán chạy, thống kê khách hàng.
 
 ## 2.4 Các quy tắc nghiệp vụ
 
-Các quy tắc nghiệp vụ là nền tảng để thiết kế model dữ liệu. Các quy tắc này làm cơ sở cho các ràng buộc nghiệp vụ và ràng buộc toàn vẹn dữ liệu.
-
-- Một khách hàng có thể đặt nhiều đơn phòng trong các thời điểm khác nhau.
-- Một đơn đặt phòng có thể có nhiều phòng.
-- Mỗi phòng chỉ thuộc duy nhất một loại phòng.
-- Một phòng không thể được đặt trùng thời gian cho nhiều khách khác nhau.
-- Mỗi hóa đơn chỉ thuộc về một đặt phòng.
-- Một hóa đơn có thể chứa nhiều dịch vụ sử dụng.
-- Dịch vụ và phòng đều phải có giá trị không âm.
-- Trạng thái phòng và đặt phòng phải nằm trong danh sách được định nghĩa trước.
+- Một khách hàng có thể có nhiều đặt phòng.
+- Một đặt phòng có thể gồm nhiều phòng.
+- Mỗi phòng thuộc một loại phòng.
+- Không cho phép đồng thời đặt cùng một phòng trong cùng thời gian.
+- Trạng thái phòng và đặt phòng chỉ nhận các giá trị định nghĩa trước.
+- Mỗi hóa đơn phải thuộc về một đặt phòng và một nhân viên lập hóa đơn.
 
 ## 2.5 Xác định các thực thể và thuộc tính
 
-### 2.5.1 Bảng KhachHang
-- MaKH: mã khách hàng, khóa chính
-- TenKH: tên khách hàng
-- NgaySinh: ngày sinh
-- GioiTinh: giới tính
-- SDT: số điện thoại
-- Email: email
-- DiaChi: địa chỉ
+### Thực thể KhachHang
+- MaKH
+- TenKH
+- NgaySinh
+- GioiTinh
+- SDT
+- Email
+- DiaChi
 
-### 2.5.2 Bảng LoaiPhong
-- MaLoai: mã loại phòng, khóa chính
-- TenLoai: tên loại phòng
-- GiaTheoDem: giá theo đêm
-- SucChua: số người tối đa
-- MoTa: mô tả
+### Thực thể LoaiPhong
+- MaLoai
+- TenLoai
+- GiaTheoDem
+- SucChua
+- MoTa
 
-### 2.5.3 Bảng Phong
-- MaPhong: mã phòng, khóa chính
-- SoPhong: số phòng
-- MaLoai: khóa ngoại tham chiếu LoaiPhong
-- Tang: tầng
-- TrangThai: trạng thái phòng
+### Thực thể Phong
+- MaPhong
+- SoPhong
+- MaLoai
+- Tang
+- TrangThai
 
-### 2.5.4 Bảng DatPhong
-- MaDat: mã đặt phòng, khóa chính
-- MaKH: khóa ngoại tham chiếu KhachHang
-- NgayDat: ngày đặt phòng
-- NgayDen: ngày nhận phòng
-- NgayDi: ngày trả phòng
-- TrangThai: trạng thái đặt phòng
-- SoNguoi: số người
-- GhiChu: ghi chú
+### Thực thể DatPhong
+- MaDat
+- MaKH
+- NgayDat
+- NgayDen
+- NgayDi
+- TrangThai
+- SoNguoi
+- GhiChu
 
-### 2.5.5 Bảng ChiTietDatPhong
-- MaDat: khóa ngoại tham chiếu DatPhong
-- MaPhong: khóa ngoại tham chiếu Phong
-- GiaTheoDem: giá phòng theo đêm
-- SoDem: số đêm thuê
-- Khóa chính: (MaDat, MaPhong)
+### Thực thể ChiTietDatPhong
+- MaDat
+- MaPhong
+- GiaTheoDem
+- SoDem
 
-### 2.5.6 Bảng NhanVien
-- MaNV: khóa chính
-- TenNV: tên nhân viên
-- ChucVu: chức vụ
-- SDT: số điện thoại
-- Luong: lương
+### Thực thể NhanVien
+- MaNV
+- TenNV
+- ChucVu
+- SDT
+- Luong
 
-### 2.5.7 Bảng HoaDon
-- MaHD: khóa chính
-- MaDat: khóa ngoại tham chiếu DatPhong
-- MaNV: khóa ngoại tham chiếu NhanVien
-- NgayLap: ngày lập hóa đơn
-- TriGia: tổng tiền
-- DaThanhToan: trạng thái thanh toán
+### Thực thể HoaDon
+- MaHD
+- MaDat
+- MaNV
+- NgayLap
+- TriGia
+- DaThanhToan
 
-### 2.5.8 Bảng DichVu
-- MaDV: khóa chính
-- TenDV: tên dịch vụ
-- DonGia: đơn giá
+### Thực thể DichVu
+- MaDV
+- TenDV
+- DonGia
 
-### 2.5.9 Bảng SuDungDV
-- MaSD: khóa chính
-- MaHD: khóa ngoại tham chiếu HoaDon
-- MaDV: khóa ngoại tham chiếu DichVu
-- SoLuong: số lượng dịch vụ
-- DonGia: đơn giá dịch vụ
-- ThanhTien: thành tiền
-a
+### Thực thể SuDungDV
+- MaSD
+- MaHD
+- MaDV
+- SoLuong
+- DonGia
+- ThanhTien
 
-## 2.6 Xác định mối liên kết giữa các thực thể
+## 2.6 Xác định mối liên kết
 
-### 2.6.1 Quan hệ KhachHang – DatPhong
-- Một khách hàng có thể có nhiều đơn đặt phòng.
-- Một đặt phòng chỉ thuộc về một khách hàng.
-- Đây là quan hệ 1–N.
-
-### 2.6.2 Quan hệ DatPhong – Phong (qua ChiTietDatPhong)
-- Một đơn đặt phòng có thể bao gồm nhiều phòng.
-- Một phòng có thể xuất hiện trong nhiều đơn đặt phòng khác nhau theo thời gian.
-- Đây là quan hệ M–N, được giải quyết bằng bảng trung gian ChiTietDatPhong.
-
-### 2.6.3 Quan hệ LoaiPhong – Phong
-- Một loại phòng có nhiều phòng.
-- Mỗi phòng chỉ thuộc một loại phòng.
-- Đây là quan hệ N–1 hoặc 1–N tùy cách nhìn.
-
-### 2.6.4 Quan hệ DatPhong – HoaDon
-- Một đặt phòng có thể dẫn đến một hóa đơn khi khách trả phòng.
-- Một hóa đơn chỉ tương ứng với một đặt phòng.
-- Đây là quan hệ 1–1 theo nghiệp vụ.
-
-### 2.6.5 Quan hệ HoaDon – SuDungDV
-- Một hóa đơn có thể có nhiều dòng dịch vụ sử dụng.
-- Mỗi dịch vụ sử dụng thuộc về một hóa đơn.
-- Đây là quan hệ 1–N.
-
-### 2.6.6 Quan hệ HoaDon – NhanVien
-- Một nhân viên có thể lập nhiều hóa đơn.
-- Một hóa đơn do một nhân viên lập.
-- Đây là quan hệ N–1.
+- KhachHang 1—N DatPhong
+- DatPhong M—N Phong thông qua ChiTietDatPhong
+- Phong N—1 LoaiPhong
+- DatPhong 1—1 HoaDon
+- HoaDon 1—N SuDungDV
+- HoaDon N—1 NhanVien
 
 ## 2.7 Mô hình ER
 
-Mô hình ER của hệ thống khách sạn có thể được mô tả như sau:
-- KhachHang có quan hệ 1–N với DatPhong.
-- DatPhong nối với Phong qua ChiTietDatPhong, tạo ra quan hệ M–N.
-- Phong thuộc về LoaiPhong.
-- DatPhong sinh ra HoaDon.
-- HoaDon chứa nhiều SuDungDV.
-- SuDungDV gắn với DichVu.
-- NhanVien lập nhiều HoaDon.
+Mô hình ER của hệ thống khách sạn gồm các thực thể chính: KhachHang, DatPhong, ChiTietDatPhong, Phong, LoaiPhong, HoaDon, SuDungDV, DichVu, NhanVien. Các quan hệ này phản ánh đúng nghiệp vụ về đặt phòng, thanh toán và dịch vụ đi kèm.
 
-Như vậy, hệ thống có tổng cộng 9 thực thể chính và nhiều mối quan hệ tương ứng. Số thực thể này thỏa yêu cầu tối thiểu “ít nhất 8 thực thể” theo đề bài.
+ERD được lưu trong file `erd.md` và có thể xem trực tiếp như sơ đồ. Mô hình ER đáp ứng yêu cầu có ít nhất 8 thực thể và nhiều hơn 7 mối liên kết.
 
-Sơ đồ ER có thể vẽ bằng Draw.io hoặc bảng Mermaid, được lưu trong file `erd.md`. Trong mô hình này, mọi thực thể đều có khóa chính rõ ràng và mối quan hệ giữa các thực thể đều phản ánh đúng nghiệp vụ quản lý khách sạn thực tế.
-
-## 2.8 Chuyển ER sang mô hình quan hệ
-
-Sau khi xác định thực thể và mối quan hệ, ta chuyển sang mô hình quan hệ như sau:
+## 2.8 Chuyển mô hình ER sang mô hình quan hệ
 
 - KhachHang(MaKH, TenKH, NgaySinh, GioiTinh, SDT, Email, DiaChi)
 - LoaiPhong(MaLoai, TenLoai, GiaTheoDem, SucChua, MoTa)
@@ -316,50 +263,38 @@ Sau khi xác định thực thể và mối quan hệ, ta chuyển sang mô hìn
 - DichVu(MaDV, TenDV, DonGia)
 - SuDungDV(MaSD, MaHD, MaDV, SoLuong, DonGia, ThanhTien)
 
-### 2.8.1 Khóa chính và khóa ngoại
-
+### Khóa chính và khóa ngoại
 - KhachHang: MaKH là khóa chính.
 - LoaiPhong: MaLoai là khóa chính.
 - Phong: MaPhong là khóa chính; MaLoai là khóa ngoại.
 - DatPhong: MaDat là khóa chính; MaKH là khóa ngoại.
-- ChiTietDatPhong: (MaDat, MaPhong) là khóa chính; MaDat và MaPhong là khóa ngoại.
+- ChiTietDatPhong: (MaDat, MaPhong) là khóa chính; MaDat, MaPhong là khóa ngoại.
 - NhanVien: MaNV là khóa chính.
-- HoaDon: MaHD là khóa chính; MaDat và MaNV là khóa ngoại.
+- HoaDon: MaHD là khóa chính; MaDat, MaNV là khóa ngoại.
 - DichVu: MaDV là khóa chính.
-- SuDungDV: MaSD là khóa chính; MaHD và MaDV là khóa ngoại.
+- SuDungDV: MaSD là khóa chính; MaHD, MaDV là khóa ngoại.
 
-## 2.9 Phụ thuộc hàm và kiểm tra chuẩn BCNF
+## 2.9 Phụ thuộc hàm và kiểm tra BCNF
 
-### 2.9.1 Phụ thuộc hàm của từng quan hệ
+### 2.9.1 Phụ thuộc hàm
+- MaKH -> TenKH, NgaySinh, GioiTinh, SDT, Email, DiaChi
+- MaLoai -> TenLoai, GiaTheoDem, SucChua, MoTa
+- MaPhong -> SoPhong, MaLoai, Tang, TrangThai
+- MaDat -> MaKH, NgayDat, NgayDen, NgayDi, TrangThai, SoNguoi, GhiChu
+- (MaDat, MaPhong) -> GiaTheoDem, SoDem
+- MaNV -> TenNV, ChucVu, SDT, Luong
+- MaHD -> MaDat, MaNV, NgayLap, TriGia, DaThanhToan
+- MaDV -> TenDV, DonGia
+- MaSD -> MaHD, MaDV, SoLuong, DonGia, ThanhTien
 
-- KhachHang: MaKH -> TenKH, NgaySinh, GioiTinh, SDT, Email, DiaChi
-- LoaiPhong: MaLoai -> TenLoai, GiaTheoDem, SucChua, MoTa
-- Phong: MaPhong -> SoPhong, MaLoai, Tang, TrangThai
-- DatPhong: MaDat -> MaKH, NgayDat, NgayDen, NgayDi, TrangThai, SoNguoi, GhiChu
-- ChiTietDatPhong: (MaDat, MaPhong) -> GiaTheoDem, SoDem
-- NhanVien: MaNV -> TenNV, ChucVu, SDT, Luong
-- HoaDon: MaHD -> MaDat, MaNV, NgayLap, TriGia, DaThanhToan
-- DichVu: MaDV -> TenDV, DonGia
-- SuDungDV: MaSD -> MaHD, MaDV, SoLuong, DonGia, ThanhTien
-
-### 2.9.2 Phân tích BCNF
-
-Một quan hệ đạt chuẩn BCNF nếu với mọi phụ thuộc hàm X -> Y trong quan hệ, X phải là khóa siêu của quan hệ hoặc Y chứa các thuộc tính khóa.
-
-Quan sát các quan hệ trên thấy rằng:
-- Tất cả các thuộc tính không khóa đều phụ thuộc hoàn toàn vào khóa chính.
-- Không có thuộc tính không khóa phụ thuộc vào một tập con của khóa chính.
-- Vì vậy, các bảng trong mô hình đều đạt BCNF ở mức cơ bản.
-
-Nếu có một số thuộc tính không khóa phụ thuộc vào phần tử của khóa tổ hợp, thì cần phân rã thêm. Trong mô hình khách sạn này, các bảng được thiết kế đơn giản và phù hợp, nên không cần phân rã nhiều.
+### 2.9.2 Kiểm tra BCNF
+Các quan hệ đều đáp ứng chuẩn BCNF vì mỗi thuộc tính không khóa đều phụ thuộc hoàn toàn vào khóa chính. Không có biến dạng phụ thuộc hàm cần phân rã thêm. Mô hình này là phù hợp với yêu cầu môn học.
 
 ---
 
 # Chương 3. Cài đặt và khai thác CSDL
 
-## 3.1 Tạo cơ sở dữ liệu
-
-Ví dụ lệnh T-SQL để tạo CSDL:
+## 3.1 Tạo database
 
 ```sql
 CREATE DATABASE KhachSanDB;
@@ -368,257 +303,98 @@ USE KhachSanDB;
 GO
 ```
 
-## 3.2 Tạo các bảng và ràng buộc
+## 3.2 Tạo bảng và ràng buộc
 
-### 3.2.1 KhachHang
-```sql
-CREATE TABLE KhachHang (
-  MaKH VARCHAR(10) PRIMARY KEY,
-  TenKH NVARCHAR(100) NOT NULL,
-  NgaySinh DATE NULL,
-  GioiTinh CHAR(1) CHECK (GioiTinh IN ('M','F','O')) NULL,
-  SDT VARCHAR(20),
-  Email NVARCHAR(100),
-  DiaChi NVARCHAR(200)
-);
-```
+Lệnh tạo bảng đã được viết đầy đủ trong file `queries.sql` và có thể chạy trực tiếp trên SQL Server. Các bảng bao gồm:
+- KhachHang
+- LoaiPhong
+- Phong
+- DatPhong
+- ChiTietDatPhong
+- NhanVien
+- HoaDon
+- DichVu
+- SuDungDV
 
-### 3.2.2 LoaiPhong
-```sql
-CREATE TABLE LoaiPhong (
-  MaLoai VARCHAR(10) PRIMARY KEY,
-  TenLoai NVARCHAR(50) NOT NULL,
-  GiaTheoDem DECIMAL(18,2) NOT NULL CHECK (GiaTheoDem >= 0),
-  SucChua INT NOT NULL CHECK (SucChua > 0),
-  MoTa NVARCHAR(200)
-);
-```
-
-### 3.2.3 Phong
-```sql
-CREATE TABLE Phong (
-  MaPhong VARCHAR(10) PRIMARY KEY,
-  SoPhong NVARCHAR(20) NOT NULL,
-  MaLoai VARCHAR(10) NOT NULL,
-  Tang INT,
-  TrangThai NVARCHAR(20) NOT NULL CHECK (TrangThai IN ('Available','Booked','Occupied','Maintenance')),
-  CONSTRAINT FK_Phong_LoaiPhong FOREIGN KEY (MaLoai) REFERENCES LoaiPhong(MaLoai)
-);
-```
-
-### 3.2.4 DatPhong
-```sql
-CREATE TABLE DatPhong (
-  MaDat VARCHAR(12) PRIMARY KEY,
-  MaKH VARCHAR(10) NOT NULL,
-  NgayDat DATETIME NOT NULL DEFAULT GETDATE(),
-  NgayDen DATE NOT NULL,
-  NgayDi DATE NOT NULL,
-  TrangThai NVARCHAR(20) NOT NULL CHECK (TrangThai IN ('Booked','CheckedIn','CheckedOut','Cancelled')),
-  SoNguoi INT,
-  GhiChu NVARCHAR(200),
-  CONSTRAINT FK_DatPhong_KhachHang FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH)
-);
-```
-
-### 3.2.5 ChiTietDatPhong
-```sql
-CREATE TABLE ChiTietDatPhong (
-  MaDat VARCHAR(12) NOT NULL,
-  MaPhong VARCHAR(10) NOT NULL,
-  GiaTheoDem DECIMAL(18,2) NOT NULL,
-  SoDem INT NOT NULL CHECK (SoDem > 0),
-  PRIMARY KEY (MaDat, MaPhong),
-  CONSTRAINT FK_CTD_DatPhong FOREIGN KEY (MaDat) REFERENCES DatPhong(MaDat),
-  CONSTRAINT FK_CTD_Phong FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong)
-);
-```
-
-### 3.2.6 NhanVien
-```sql
-CREATE TABLE NhanVien (
-  MaNV VARCHAR(10) PRIMARY KEY,
-  TenNV NVARCHAR(100) NOT NULL,
-  ChucVu NVARCHAR(50),
-  SDT VARCHAR(20),
-  Luong DECIMAL(18,2) CHECK (Luong >= 0)
-);
-```
-
-### 3.2.7 HoaDon
-```sql
-CREATE TABLE HoaDon (
-  MaHD VARCHAR(12) PRIMARY KEY,
-  MaDat VARCHAR(12) NOT NULL,
-  MaNV VARCHAR(10) NULL,
-  NgayLap DATETIME NOT NULL DEFAULT GETDATE(),
-  TriGia DECIMAL(18,2) NOT NULL CHECK (TriGia >= 0),
-  DaThanhToan BIT DEFAULT 0,
-  CONSTRAINT FK_HoaDon_DatPhong FOREIGN KEY (MaDat) REFERENCES DatPhong(MaDat),
-  CONSTRAINT FK_HoaDon_NhanVien FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV)
-);
-```
-
-### 3.2.8 DichVu
-```sql
-CREATE TABLE DichVu (
-  MaDV VARCHAR(10) PRIMARY KEY,
-  TenDV NVARCHAR(100) NOT NULL,
-  DonGia DECIMAL(18,2) NOT NULL CHECK (DonGia >= 0)
-);
-```
-
-### 3.2.9 SuDungDV
-```sql
-CREATE TABLE SuDungDV (
-  MaSD VARCHAR(12) PRIMARY KEY,
-  MaHD VARCHAR(12) NOT NULL,
-  MaDV VARCHAR(10) NOT NULL,
-  SoLuong INT NOT NULL CHECK (SoLuong > 0),
-  DonGia DECIMAL(18,2) NOT NULL,
-  ThanhTien AS (SoLuong * DonGia) PERSISTED,
-  CONSTRAINT FK_SD_HoaDon FOREIGN KEY (MaHD) REFERENCES HoaDon(MaHD),
-  CONSTRAINT FK_SD_DichVu FOREIGN KEY (MaDV) REFERENCES DichVu(MaDV)
-);
-```
+Mỗi bảng đều có khóa chính, khóa ngoại và ràng buộc CHECK tương ứng.
 
 ## 3.3 Nhập dữ liệu mẫu
 
-Để kiểm thử hệ thống, mỗi bảng cần tối thiểu 20 bản ghi. Trong repo, nhóm em đã sinh dữ liệu mẫu số lượng như sau:
-- LoaiPhong: 25
-- Phong: 60
-- KhachHang: 50
-- NhanVien: 25
-- DichVu: 30
-- DatPhong: 40
-- ChiTietDatPhong: > 40
-- HoaDon: >= 40
-- SuDungDV: nhiều bản ghi
+Dữ liệu mẫu được sinh với số lượng lớn hơn 20 bản ghi cho từng bảng, nhằm mục đích kiểm thử và tìm lỗi. Dữ liệu có các trạng thái bình thường và biên, như:
+- phòng trống, phòng đã đặt, phòng đang ở;
+- khách hàng có lịch sử đặt nhiều lần;
+- dịch vụ có giá khác nhau;
+- có dữ liệu trùng ở một số thuộc tính không khóa.
 
-Việc sinh dữ liệu này nhằm mục đích:
-- Kiểm tra các truy vấn có trả về nhiều kết quả;
-- Có dữ liệu ở mức bình thường và mức biên;
-- Có dữ liệu trùng và có dữ liệu bất thường để rèn kỹ năng xử lý dữ liệu.
+## 3.4 Thao tác DML minh họa
 
-### 3.3.1 Ví dụ INSERT dữ liệu
+### Insert
 ```sql
 INSERT INTO KhachHang(MaKH, TenKH, NgaySinh, GioiTinh, SDT, Email, DiaChi)
 VALUES ('KH001', N'Nguyễn Văn A', '1998-05-12', 'M', '0901234567', 'a@gmail.com', N'Hà Nội');
 ```
 
-### 3.3.2 Ví dụ INSERT loại phòng
-```sql
-INSERT INTO LoaiPhong(MaLoai, TenLoai, GiaTheoDem, SucChua, MoTa)
-VALUES ('L01', N'Phòng tiêu chuẩn', 500000, 2, N'Phòng có giường đơn');
-```
-
-### 3.3.3 Ví dụ INSERT phòng
-```sql
-INSERT INTO Phong(MaPhong, SoPhong, MaLoai, Tang, TrangThai)
-VALUES ('P001', '101', 'L01', 1, 'Available');
-```
-
-### 3.3.4 Ví dụ INSERT hóa đơn
-```sql
-INSERT INTO HoaDon(MaHD, MaDat, MaNV, NgayLap, TriGia, DaThanhToan)
-VALUES ('HD001', 'DP001', 'NV01', GETDATE(), 1200000, 1);
-```
-
-## 3.4 Thao tác DML minh họa và ràng buộc toàn vẹn
-
-### 3.4.1 UPDATE
+### Update
 ```sql
 UPDATE Phong
 SET TrangThai = 'Occupied'
 WHERE MaPhong = 'P001';
 ```
 
-### 3.4.2 DELETE
+### Delete
 ```sql
 DELETE FROM DichVu WHERE MaDV = 'DV01';
 ```
 
-### 3.4.3 Thêm khóa chính trùng
+### Lỗi khóa chính trùng
 ```sql
 INSERT INTO KhachHang(MaKH, TenKH) VALUES ('KH001', N'Test');
 ```
-Lệnh sẽ lỗi vì MaKH đã tồn tại.
 
-### 3.4.4 Thêm khóa ngoại không tồn tại
+### Lỗi khóa ngoại không tồn tại
 ```sql
 INSERT INTO DatPhong(MaDat, MaKH, NgayDen, NgayDi, TrangThai)
 VALUES ('DP999', 'KH999', '2026-11-01', '2026-11-03', 'Booked');
 ```
-Lệnh sẽ lỗi vì KH999 không tồn tại trong KhachHang.
 
-### 3.4.5 Vi phạm CHECK
+### Lỗi CHECK
 ```sql
 INSERT INTO LoaiPhong(MaLoai, TenLoai, GiaTheoDem, SucChua)
 VALUES ('L99', N'Test', -100, 0);
 ```
-Lệnh sẽ lỗi vì giá tiền và sức chứa không hợp lệ.
+
+Những ví dụ trên cho thấy ràng buộc toàn vẹn của hệ thống hoạt động đúng với dữ liệu không hợp lệ.
 
 ## 3.5 Truy vấn SQL minh họa
 
-Nhóm em đã tách riêng 15 câu truy vấn SQL trong file `queries.sql` theo yêu cầu, nên phần báo cáo chính chỉ nêu ý nghĩa chủ yếu và hướng sử dụng. Dưới đây là phân loại truy vấn và ví dụ mô tả ngắn gọn:
-
-### 3.5.1 Truy vấn cơ bản
-- Hiển thị tất cả dữ liệu khách hàng.
-- Hiển thị phòng trống theo tầng.
-- Liệt kê loại phòng có giá cao hơn X.
-- Tìm đặt phòng của một khách hàng.
-
-### 3.5.2 Truy vấn nhiều bảng
-- Liệt kê chi tiết đặt phòng kèm thông tin loại phòng.
-- Tổng hợp hóa đơn với nhân viên lập hóa đơn.
-- Tìm thông tin dịch vụ của mỗi hóa đơn.
-
-### 3.5.3 Gom nhóm và thống kê
-- Tổng doanh thu theo từng tháng.
-- Tìm 5 phòng được đặt nhiều nhất.
-- Xếp hạng khách hàng theo tổng chi tiêu.
-- Doanh thu dịch vụ theo từng loại dịch vụ.
-
-### 3.5.4 Truy vấn lồng nhau
-- Tìm khách hàng có chi tiêu lớn hơn trung bình toàn hệ thống.
-- Tìm phòng chưa từng được đặt.
-- Phát hiện đặt phòng chồng lịch (double booking).
-
-Vì phần 15 câu truy vấn SQL được tách riêng trong file `queries.sql`, nên phần báo cáo này không nhắc lại toàn bộ câu lệnh mà tập trung vào ý nghĩa nghiệp vụ và mục đích kiểm thử.
+Phần này đã được tách riêng thành file `queries.sql` để đáp ứng yêu cầu của nhóm, không đưa vào báo cáo chính. Tập hợp truy vấn này bao gồm:
+- truy vấn cơ bản;
+- truy vấn nhiều bảng;
+- truy vấn gom nhóm và thống kê;
+- truy vấn lồng nhau;
+- truy vấn kiểm tra chồng lịch đặt phòng.
 
 ---
 
 # Kết luận
 
-Nhóm em đã hoàn thành quá trình phân tích, thiết kế và cài đặt cơ sở dữ liệu cho hệ thống quản lý khách sạn. Trong suốt quá trình làm đồ án, nhóm em đã áp dụng những nội dung quan trọng của môn Cơ sở dữ liệu như xác định thực thể, thuộc tính, mối quan hệ, chuyển mô hình ER sang mô hình quan hệ, chuẩn hóa, và cài đặt trên SQL Server.
+Qua đồ án này, nhóm em đã thực hiện đầy đủ các nội dung trọng tâm của môn Cơ sở dữ liệu: phân tích bài toán, xác định thực thể và thuộc tính, thiết kế mô hình ER, chuyển sang mô hình quan hệ, chuẩn hóa dữ liệu, cài đặt trên SQL Server và viết truy vấn SQL kiểm thử. Đề tài Quản lý khách sạn là một ví dụ thực tế rất phù hợp để ứng dụng lý thuyết vào thực hành.
 
-Đề tài Quản lý khách sạn là một ví dụ lý tưởng cho việc thiết kế CSDL bởi vì nó bao gồm nhiều lớp dữ liệu và nhiều quan hệ phức tạp nhưng vẫn rất gần với thực tế. Từ đó, nhóm em hiểu rõ hơn rằng thiết kế dữ liệu không chỉ là viết bảng và câu lệnh SQL, mà còn là phải suy nghĩ về nghiệp vụ, ràng buộc dữ liệu, tính nhất quán và khả năng khai thác thông tin cho các báo cáo sau này.
-
-Nếu tiếp tục phát triển, hệ thống có thể được nâng cấp theo nhiều hướng:
-- thêm phần thanh toán trực tuyến;
-- thêm bảng khuyến mãi và voucher;
-- thêm chức năng báo cáo tự động bằng BI;
-- thêm giao diện web hoặc ứng dụng di động;
-- thêm phân quyền người dùng và lịch sử log hoạt động.
-
-Nhờ đó, hệ thống sẽ gần gũi với các ứng dụng quản lý khách sạn thực tế hơn, không những phục vụ cho bài tập mà còn có thể ứng dụng vào doanh nghiệp nhỏ và vừa.
+Hệ thống đã đáp ứng các yêu cầu cơ bản của một ứng dụng quản lý khách sạn như lưu thông tin khách hàng, đặt phòng, lập hóa đơn, quản lý dịch vụ và báo cáo doanh thu. Nếu tiếp tục phát triển, hệ thống có thể mở rộng thêm các tính năng như quản lý thanh toán online, báo cáo BI, phân quyền người dùng và tích hợp với giao diện web hoặc mobile.
 
 ---
 
 # Tài liệu tham khảo
-- Giáo trình môn Cơ sở dữ liệu.
-- Slides bài giảng của giảng viên.
-- Microsoft SQL Server Documentation.
-- Tài liệu về ERD, chuẩn hóa dữ liệu và phụ thuộc hàm.
+- Giáo trình môn Cơ sở dữ liệu
+- Microsoft SQL Server Documentation
+- Tài liệu về mô hình ER, phụ thuộc hàm và BCNF
+- Tài liệu tham khảo về thiết kế hệ thống quản lý khách sạn
 
 ---
 
 # Phụ lục
+- File ERD: `erd.md`
+- File SQL riêng (15 truy vấn): `queries.sql`
+- File báo cáo chính: `report.md`
 
-1. File báo cáo chính: `report.md`
-2. File truy vấn SQL riêng: `queries.sql`
-3. File sơ đồ ERD: `erd.md`
-
----
-
-Kết thúc báo cáo theo dạng sinh viên năm 2.
+Kết thúc báo cáo.
